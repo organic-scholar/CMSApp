@@ -25,6 +25,7 @@
             <!-- form start -->
             <form class="form-horizontal" id="create-table" method="POST" action="/tables">
               <div class="box-body">
+                @if($errors->any())
                   <div class="alert alert-danger">
                     @foreach($errors->all() as $error)
                       <ul>
@@ -32,6 +33,7 @@
                       </ul>
                     @endforeach
                   </div>
+                @endif
                 <div class="form-group">
                   <label class="col-sm-2 control-label">Table Name</label>
                   <div class="col-sm-9">

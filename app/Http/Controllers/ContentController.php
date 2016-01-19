@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Table;
-
+use App\Http\Requests\StoreContentRequest;
 use Illuminate\Support\Facades\DB;
 
 
@@ -42,7 +42,6 @@ class ContentController extends Controller
     public function create()
     {
         $table = Table::where('name', $this->contentType)->first();
-
         return view('content.create', ['table' => $table]);
     }
 
@@ -52,9 +51,14 @@ class ContentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreContentRequest $request)
     {
-        DB::table($this->contentType)->insert($request->except('type'));
+        $table = Table::where('name', $this->contentType)->first();
+        $attributes = [];
+        foreach($table->fields as $field){
+            $attributes[$field['name']] = $request->get($field['name']);
+        }
+        DB::table($this->contentType)->insert($attributes);
         return redirect("/content?type={$this->contentType}");
     }
 
